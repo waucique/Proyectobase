@@ -1,0 +1,45 @@
+defaultTasks 'clean', 'test', 'aggregate'
+apply plugin: 'java'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+buildscript{
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.80")
+
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    // Dependencias para poder automatizar con Serenity
+    implementation 'net.serenity-bdd:serenity-junit:2.0.80'
+    implementation 'net.serenity-bdd:serenity-cucumber:1.9.45'
+    implementation 'net.serenity-bdd:serenity-core:2.0.80'
+    implementation 'org.slf4j:slf4j-simple:1.7.7'
+    implementation 'com.google.guava:guava:23.0'
+
+    implementation fileTree(dir: 'libs', include: '*.jar')
+
+}
+
+test.finalizedBy(aggregate)
+
+test{
+    ignoreFailures = true
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+gradle.startParameter.continueOnFailure = true
+//gradle clean test aggregate & cd target/site/serenity & index.html
